@@ -1,4 +1,8 @@
 defmodule ExSms.Adapter.Submail do
+  @moduledoc """
+  The Submail Adapter. https://submail.cn
+  """
+
   alias ExSms.Adapter.Submail.Single
   alias ExSms.Adapter.Submail.Multi
 
@@ -32,7 +36,8 @@ defmodule ExSms.Adapter.Submail do
       |> add_config_data(api)
       |> generate_data(:single)
 
-    [url: url, body: body]
+    [url: url, body: body,
+     headers: [{"Content-Type", "application/x-www-form-urlencoded"}]]
   end
 
   @doc """
@@ -63,12 +68,13 @@ defmodule ExSms.Adapter.Submail do
   def multi_adapter(params, api) do
     url = @endpoint <> "/multixsend"
     body =
-      Mulit
+      Multi
       |> struct(params)
       |> add_config_data(api)
       |> generate_data(:multi)
 
-    [url: url, body: body]
+    [url: url, body: body,
+     headers: [{"Content-Type", "application/x-www-form-urlencoded"}]]
   end
 
   defp add_config_data(struct, api) do
@@ -95,6 +101,10 @@ defmodule ExSms.Adapter.Submail do
   end
 
   defmodule Single do
+    @moduledoc """
+    The data struct with single send.
+    """
+
     defstruct appid: nil, to: nil, project: nil, vars: nil,
               timestamp: nil, sign_type: "normal", signature: nil
 
@@ -116,7 +126,7 @@ defmodule ExSms.Adapter.Submail do
       case value do
         nil -> ""
         _   ->
-          if (key == :vars) do
+          if key == :vars do
             "#{key}=#{Poison.encode!(value)}"
           else
             "#{key}=#{value}"
@@ -126,6 +136,10 @@ defmodule ExSms.Adapter.Submail do
   end
 
   defmodule Multi do
+    @moduledoc """
+    The data struct with multi send.
+    """
+
     defstruct appid: nil, project: nil, multi: nil, signature: nil
 
     def data(struct) do
@@ -146,7 +160,7 @@ defmodule ExSms.Adapter.Submail do
       case value do
         nil -> ""
         _   ->
-          if (key == :multi) do
+          if key == :multi do
             "#{key}=#{Poison.encode!(value)}"
           else
             "#{key}=#{value}"

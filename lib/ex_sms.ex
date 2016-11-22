@@ -1,9 +1,12 @@
 defmodule ExSms do
+  @moduledoc """
+  The ExSms is an api wraper to adapter the api that send cellphone sms.
+  """
 
   def http_post(params) do
-    case HTTPoison.post(params[:url], params[:body], [{"Content-Type", "application/x-www-form-urlencoded"}]) do
+    case HTTPoison.post(params[:url], params[:body], params[:headers]) do
       {:ok, response} ->
-        Poison.decode! response.body
+        Poison.decode!(response.body, keys: :atoms)
       {:error, error} ->
         {:error, error.reason}
     end

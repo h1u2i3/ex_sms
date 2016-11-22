@@ -20,9 +20,6 @@ use Mix.Config
 #
 #     config :logger, level: :info
 #
-config :ex_sms, ExSms.Adapter.Submail,
-  appid: System.get_env("SUBMAIL_APPID"),
-  signature: System.get_env("SUBMAIL_APPKEY")
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
@@ -30,4 +27,4 @@ config :ex_sms, ExSms.Adapter.Submail,
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
 #
-#     import_config "#{Mix.env}.exs"
+import_config "#{Mix.env}.exs"
